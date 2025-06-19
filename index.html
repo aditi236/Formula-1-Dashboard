@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formula 1 Dashboard</title>
+
+    <!--CSS  -->
+    <link rel="stylesheet" href="styles/main.css">
+
+    <!-- D3.js Library -->
+    <script src="libs/d3/d3.v7.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Formula 1</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#track-map" class="nav-link active">Track Map</a></li>
+                    <li><a href="#drivers" class="nav-link">Drivers</a></li>
+                    <li><a href="#constructors" class="nav-link">Constructors</a></li>
+                    <li><a href="#tyres" class="nav-link">Tyres</a></li>
+                    <li><a href="#engines" class="nav-link">Engines</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Welcome Header -->
+            <header class="main-header">
+                <h1>Welcome to the Formula 1 Dashboard! <span class="f1-car">🏎️</span></h1>
+                <p class="header-description">
+                    This dashboard provides a data-driven look at F1 history,
+                    allowing you to track driver progress, compare seasons,
+                    analyze points systems, and explore the evolution of the
+                    sport through dynamic visuals.
+                </p>
+            </header>
+
+            <!-- Track Map Section -->
+            <section id="track-map" class="visualization-section">
+                <h2 class="section-title">Track Map</h2>
+                <div class="section-content">
+                    <div class="section-header">
+                        <h3>Grand Prix Seasons - Follow any Race from 1950 to 2024</h3>
+                        <div class="controls">
+                            <div class="season-selector-container">
+                                <select id="season-select" class="season-selector"></select>
+                                <span class="season-selector-arrow"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visualization-container">
+                        <!-- Map will be rendered here by initTrackMapVisualization -->
+                        <div id="track-map-visualization"></div>
+                    </div>
+
+                    <div id="race-details-container" style="margin-top: 20px;">
+                        <!-- fastest lap chart and podium so far -->
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Drivers Section -->
+            <section id="drivers" class="visualization-section">
+                <h2 class="section-title">Drivers</h2>
+                <div class="section-content">
+                    <div class="section-header">
+                        <h3>The Champions</h3>
+                    </div>
+                    <div class="visualization-container" style="margin-bottom: 30px;">
+                        <div id="champions-visualization"></div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3>Driver Statistics & Performance</h3>
+                        <div class="controls">
+                            <!-- Metric dropdown -->
+                            <div class="season-selector-container">
+                                <select id="driver-metric" class="season-selector"></select>
+                                <span class="season-selector-arrow"></span>
+                            </div>
+
+                            <!-- driver dropdown -->
+                            <div class="season-selector-container driver-select-container" id="driver-select-container">
+                                <div class="driver-select-header" id="driver-select-header">
+                                    <div class="driver-selected-list" id="driver-selected-list">
+                                        <span class="placeholder-text">Select Driver(s)</span>
+                                    </div>
+                                    <span class="driver-select-arrow">&#9662;</span>
+                                </div>
+                                <div class="driver-dropdown" id="driver-dropdown">
+                                    <input type="text" id="driver-search" placeholder="Search drivers..." />
+                                    <div id="driver-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="visualization-container">
+                        <div id="drivers-visualization"></div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Constructors Section -->
+            <section id="constructors" class="visualization-section">
+                <h2 class="section-title">Constructors</h2>
+                <div class="section-content">
+                    <div class="section-header" id="constructors-bubble-chart-header">
+                        <h3>Constructor Champions</h3>
+                        <!-- Metric dropdown -->
+                        <div class="controls">
+                            <div class="season-selector-container">
+                                <select id="constructor-bubble-metric" class="season-selector"></select>
+                                <span class="season-selector-arrow"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visualization-container" style="margin-bottom: 30px;">
+                        <div id="constructors-bubble-chart-body"></div>
+                    </div>
+                    <!-- Line Chart Header & Controls -->
+                    <div class="section-header" id="constructors-line-chart-header">
+                        <h3>Constructor Statistics & Performance</h3>
+                        <div class="controls">
+                            <!-- Metric dropdown -->
+                            <div class="season-selector-container">
+                                <select id="constructor-metric" class="season-selector"></select>
+                                <span class="season-selector-arrow"></span>
+                            </div>
+
+                            <!-- constructor dropdown -->
+                            <div class="season-selector-container driver-select-container"
+                                id="constructor-select-container">
+                                <div class="driver-select-header" id="constructor-select-header">
+                                    <div class="driver-selected-list" id="constructor-selected-list">
+                                        <span class="placeholder-text">Select Constructor(s)</span>
+                                    </div>
+                                    <span class="driver-select-arrow">&#9662;</span>
+                                </div>
+                                <div class="driver-dropdown" id="constructor-dropdown">
+                                    <input type="text" id="constructor-search" placeholder="Search constructors..." />
+                                    <div id="constructor-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visualization-container">
+                        <div id="constructors-line-chart-body"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tyres Section -->
+            <section id="tyres" class="visualization-section">
+                <h2 class="section-title">Tyres</h2>
+                <div class="section-content">
+                    <div class="section-header">
+                        <h3>Tyre Manufacturer Comparison</h3>
+                        <div class="controls">
+                            <div class="season-selector-container">
+                                <select id="tyre-metric" class="season-selector">
+                                    <option value="totalRaceWins">Race Wins</option>
+                                    <option value="totalPolePositions">Pole Positions</option>
+                                    <option value="totalFastestLaps">Fastest Laps</option>
+                                </select>
+                                <span class="season-selector-arrow"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visualization-container">
+                        <div id="tyres-visualization"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Engines Section -->
+            <section id="engines" class="visualization-section">
+                <h2 class="section-title">Engines</h2>
+                <div class="section-content">
+                    <div class="section-header">
+                        <h3>Top 5 Engine Manufacturers</h3>
+                        <div class="controls">
+                            <div class="season-selector-container">
+                                <select id="engine-metric" class="season-selector">
+                                    <option value="totalRaceWins">Race Wins</option>
+                                    <option value="SustainabilityScore">Sustainability Score</option>
+                                </select>
+                                <span class="season-selector-arrow"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visualization-container">
+                        <div id="engines-visualization"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="scripts/visualizations/track-map/track-map.js"></script>
+    <script src="scripts/visualizations/track-map/fastest-lap.js"></script>
+    <script src="scripts/visualizations/track-map/podium-barchart.js"></script>
+    <script src="scripts/visualizations/track-map/driver-standings.js"></script>
+    <script src="scripts/visualizations/track-map/constructor-standings.js"></script>
+    <script src="scripts/visualizations/drivers/drivers-bar.js"></script>
+    <script src="scripts/visualizations/drivers/line_chart.js"></script>
+    <script src="scripts/visualizations/constructors/selectionManager.js"></script>
+    <script src="scripts/visualizations/constructors/constructors.js"></script>
+    <script src="scripts/visualizations/constructors/bubble-chart-constructors.js"></script>
+    <script src="scripts/visualizations/constructors/line-chart-constructors.js"></script>
+    <script src="scripts/visualizations/races.js"></script>
+    <script src="scripts/visualizations/seasons.js"></script>
+    <script src="scripts/visualizations/tyres.js"></script>
+    <script src="scripts/visualizations/engines.js"></script>
+
+    <script src="scripts/main.js"></script>
+
+</body>
+
+</html>
